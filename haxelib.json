@@ -1,0 +1,14 @@
+{
+  "name": "zygameui-js-adaptation",
+  "url": "",
+  "license": "MIT",
+  "tags": [],
+  "description": "",
+  "version": "1.3.9",
+  "releasenote": "",
+  "contributors": ["rainy","zygameui","zygameui"],
+  "dependencies": {
+      
+  },
+  "classPath": "JsSource"
+}
