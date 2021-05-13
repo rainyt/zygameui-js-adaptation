@@ -16,12 +16,12 @@ class URLLoader {
 			case Event.COMPLETE:
 				xml.onloadend = function() {
 					this.data = xml.responseText;
-					cb(new Event());
+					cb(new Event(Event.COMPLETE));
 				}
 			case IOErrorEvent.IO_ERROR:
 				xml.onerror = function() {
 					this.data = xml.responseText;
-					cb(new IOErrorEvent());
+					cb(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 				}
 		}
 	}
