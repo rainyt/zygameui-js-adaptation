@@ -61,17 +61,17 @@ class URLLoader {
 
 	public function load(url:URLRequest):Void {
 		#if objc
-		var url = NSURL.URLWithString("http://www.baidu.com");
+		var url = NSURL.URLWithString(url.url);
 		var request = NSURLRequest.requestWithURL(url);
 		var session = NSURLSession.sharedSession();
 		var task = session.dataTaskWithRequestCompletionHandler(request,
 			NSData_NSURLResponse_NSError(function(data:NSData, response:NSURLResponse, err:NSError) {
 				if (err != null) {
 					this.data = null;
-					this.onerror();
+					this.onerror(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 				} else {
 					this.data = data.toBytes().toString();
-					this.onloadend();
+					this.onloadend(new Event(Event.COMPLETE));
 				}
 			}));
 		task.resume();
