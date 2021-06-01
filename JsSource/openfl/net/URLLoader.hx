@@ -1,9 +1,17 @@
 package openfl.net;
 
+import cpp.objc.NSError;
+import ios.foundation.NSURLResponse;
+import cpp.objc.NSData;
+import Objc.NSData_NSURLResponse_NSError;
+import ios.foundation.NSURLSession;
+import ios.foundation.NSURLRequest;
 import sys.ssl.Socket;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
-#if cpp
+#if objc
+import ios.foundation.NSURL;
+#elseif cpp
 import haxe.Http;
 #else
 import js.html.XMLHttpRequest;
@@ -12,7 +20,8 @@ import js.html.XMLHttpRequest;
 class URLLoader {
 	public var data:Dynamic;
 
-	#if cpp
+	#if objc
+	#elseif cpp
 	private var xml:Http = null;
 	#else
 	private var xml = new XMLHttpRequest();
@@ -20,14 +29,14 @@ class URLLoader {
 
 	public function new() {}
 
-	#if cpp
+	#if (cpp || objc)
 	private dynamic function onloadend(e:Event) {}
 
 	private dynamic function onerror(e:Event) {}
 	#end
 
 	public function addEventListener(event:String, cb:Dynamic):Void {
-		#if cpp
+		#if (cpp || objc)
 		switch (event) {
 			case Event.COMPLETE:
 				this.onloadend = cb;
@@ -51,7 +60,16 @@ class URLLoader {
 	}
 
 	public function load(url:URLRequest):Void {
-		#if cpp
+		#if objc
+		var url = NSURL.URLWithString("http://www.baidu.com");
+		var request = NSURLRequest.requestWithURL(url);
+		var session = NSURLSession.sharedSession();
+		var task = session.dataTaskWithRequestCompletionHandler(request,
+			NSData_NSURLResponse_NSError(function(data:NSData, response:NSURLResponse, err:NSError) {
+				trace("GetData", data.toBytes().toString());
+			}));
+		task.resume();
+		#elseif cpp
 		Socket.DEFAULT_VERIFY_CERT = false;
 		xml = new Http(url.url);
 		xml.onData = function(data) {

@@ -1,0 +1,3 @@
+--class-path JsSource
+-D objc
+--library hx-ios-uikit
