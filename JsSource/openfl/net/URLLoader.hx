@@ -1,16 +1,16 @@
 package openfl.net;
 
+import sys.ssl.Socket;
+import openfl.events.Event;
+import openfl.events.IOErrorEvent;
+#if objc
+import ios.foundation.NSURL;
 import cpp.objc.NSError;
 import ios.foundation.NSURLResponse;
 import cpp.objc.NSData;
 import Objc.NSData_NSURLResponse_NSError;
 import ios.foundation.NSURLSession;
 import ios.foundation.NSURLRequest;
-import sys.ssl.Socket;
-import openfl.events.Event;
-import openfl.events.IOErrorEvent;
-#if objc
-import ios.foundation.NSURL;
 #elseif cpp
 import haxe.Http;
 #else
@@ -66,7 +66,13 @@ class URLLoader {
 		var session = NSURLSession.sharedSession();
 		var task = session.dataTaskWithRequestCompletionHandler(request,
 			NSData_NSURLResponse_NSError(function(data:NSData, response:NSURLResponse, err:NSError) {
-				trace("GetData", data.toBytes().toString());
+				if (err != null) {
+					this.data = null;
+					this.onerror();
+				} else {
+					this.data = data.toBytes().toString();
+					this.onloadend();
+				}
 			}));
 		task.resume();
 		#elseif cpp
