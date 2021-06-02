@@ -1,6 +1,8 @@
 package zygame.utils;
 
+#if objc
 import ios.foundation.NSUserDefaults;
+#end
 
 class Lib {
 	public static function getData(key:String, defaultValue:Dynamic = null):Dynamic {
