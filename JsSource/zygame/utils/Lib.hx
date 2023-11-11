@@ -17,8 +17,6 @@ class Lib {
 	public static function setData(key:String, value:Dynamic):Void {
 		#if objc
 		NSUserDefaults.standardUserDefaults().setObjectForKey(value, key);
-		#else
-		return defaultValue;
 		#end
 	}
 

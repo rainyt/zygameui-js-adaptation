@@ -11,7 +11,7 @@ import cpp.objc.NSData;
 import Objc.NSData_NSURLResponse_NSError;
 import ios.foundation.NSURLSession;
 import ios.foundation.NSURLRequest;
-#elseif cpp
+#elseif sys
 import haxe.Http;
 #else
 import js.html.XMLHttpRequest;
