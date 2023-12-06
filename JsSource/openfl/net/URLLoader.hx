@@ -21,7 +21,7 @@ class URLLoader {
 	public var data:Dynamic;
 
 	#if objc
-	#elseif cpp
+	#elseif sys
 	private var xml:Http = null;
 	#else
 	private var xml = new XMLHttpRequest();
@@ -29,14 +29,14 @@ class URLLoader {
 
 	public function new() {}
 
-	#if (cpp || objc)
+	#if (sys || objc)
 	private dynamic function onloadend(e:Event) {}
 
 	private dynamic function onerror(e:Event) {}
 	#end
 
 	public function addEventListener(event:String, cb:Dynamic):Void {
-		#if (cpp || objc)
+		#if (sys || objc)
 		switch (event) {
 			case Event.COMPLETE:
 				this.onloadend = cb;
@@ -75,9 +75,13 @@ class URLLoader {
 				}
 			}));
 		task.resume();
-		#elseif cpp
+		#elseif sys
 		Socket.DEFAULT_VERIFY_CERT = false;
 		xml = new Http(url.url);
+		#if curl
+		var curl:String = "CURL: curl -H \"Content-Type:application/json\" -H \"showSignStr:true\" -X POST --data '" + url.data + "' " + url.url;
+		trace(curl);
+		#end
 		xml.onData = function(data) {
 			this.data = data;
 			onloadend(new Event(Event.COMPLETE));
@@ -86,7 +90,7 @@ class URLLoader {
 			this.data = data;
 			onerror(new IOErrorEvent(IOErrorEvent.IO_ERROR));
 		}
-		xml.setHeader("Content-Type", "application/json; charset=utf-8");
+		xml.setHeader("Content-Type", "application/json");
 		xml.setPostData(url.data);
 		xml.request(url.method == "POST");
 		#else
